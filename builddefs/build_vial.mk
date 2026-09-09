@@ -12,6 +12,14 @@ KEY_OVERRIDE_ENABLE ?= yes
 LAYER_LOCK_ENABLE ?= yes
 REPEAT_KEY_ENABLE ?= yes
 SRC += $(QUANTUM_DIR)/vial.c
+# This tree does not add these via nvm/rules.mk; Vial needs them to link.
+SRC += $(QUANTUM_DIR)/dynamic_keymap.c
+SRC += $(QUANTUM_DIR)/nvm/$(NVM_DRIVER)/nvm_dynamic_keymap.c
+# Keep every TU (vial.c, dynamic_keymap.c, nvm_*) on the same layer count the
+# keymap selects; fall back to each header's default when the keymap sets none.
+ifneq ($(strip $(DYNAMIC_KEYMAP_LAYER_COUNT)),)
+    OPT_DEFS += -DDYNAMIC_KEYMAP_LAYER_COUNT=$(DYNAMIC_KEYMAP_LAYER_COUNT)
+endif
 OPT_DEFS += -DVIAL_ENABLE -DNO_DEBUG -DSERIAL_NUMBER=\"vial:f64c2b3c\" -DCAPS_WORD_INVERT_ON_SHIFT
 
 ifeq ($(strip $(VIAL_INSECURE)), yes)

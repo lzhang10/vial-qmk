@@ -17,6 +17,12 @@
 #include "keymap_introspection.h"
 #include "util.h"
 
+// Vial builds: vial.c provides the combo/tap-dance/key-override arrays, so the
+// VIAL_*_ENABLE macros must be visible here to skip the plain keymap blocks below.
+#if defined(VIAL_ENABLE)
+#include "vial.h"
+#endif
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Key mapping
 
