@@ -17,6 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include QMK_KEYBOARD_H
 
+// The generated default_keyboard.h (included above) defines a 16x16 LAYOUT_all
+// from info.json, which does not fit the 10x16 virtual matrix of this keymap.
+// Override it with the keymap-local 10-row LAYOUT_all (natural rows 0-8 +
+// packed tail row, see layout.h and config.h).
+#undef LAYOUT_all
+#include "layout.h"
+
 // lzhang: idle wake - tap KC_SYSTEM_WAKE after 9m30s without key input, so the
 // host PC does not fall asleep while the Magic Keyboard is attached. Ported from
 // the old converter/usb_usb custom_matrix.cpp; it lives here (keymap level) because
