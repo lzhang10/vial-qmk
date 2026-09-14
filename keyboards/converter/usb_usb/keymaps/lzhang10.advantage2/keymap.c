@@ -26,8 +26,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    /* 0: standard Kinesis Advantage 2 layout, plain keycodes, one Vial-editable
-     *    layer. Same physical wiring as the QMK lzhang10.advantage2 BASE layer
+    /* 0: standard Kinesis Advantage 2 layout, plain keycodes, three Vial-editable
+     *    layers. Same physical wiring as the QMK lzhang10.advantage2 BASE layer
      *    (see LAYOUT_kinesis), but every customized keycode replaced by the
      *    plain standard code of the physical key it sits on. Differences from
      *    the QMK BASE: LF0-LF5 are KC_ESC/KC_F1-F5 (QMK has app-launcher
@@ -39,7 +39,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      *    PGDN/ENT/SPC (QMK: layer taps/combos). RF7/RF8 are adv2-internal
      *    Keypad/Progrm keys with no matrix wiring.
      *
-     *    Remap everything in the Vial web UI on this single layer.
+     *    Remap everything in the Vial web UI across the three layers.
      */
     [0] = LAYOUT_kinesis(
     KC_ESC,   KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,      KC_F9,   KC_F10,  KC_F11,  KC_F12, KC_MUTE, KC_VOLD, KC_VOLU, XXX, XXX,
@@ -48,8 +48,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_CAPS, KC_A,   KC_S,   KC_D,   KC_F,   KC_G,      KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
                           KC_LSFT, KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,      KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,
                                 KC_GRV,  KC_BSLS, KC_LEFT, KC_RGHT,                       KC_UP,   KC_DOWN, KC_LBRC, KC_RBRC,
-                                                    KC_LCTL, KC_LALT,         KC_RGUI, KC_RCTL,
-                                                                   KC_HOME,   KC_PGUP,
-                                KC_BSPC, KC_DEL,  KC_END,            KC_PGDN, KC_ENT,  KC_SPC
+                                                    KC_LCTL, KC_LALT, KC_HOME, KC_BSPC, KC_DEL,  KC_END,
+                                                                      KC_RGUI, KC_RCTL, KC_PGUP, KC_PGDN, KC_ENT,  KC_SPC,
+    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO,    KC_NO  // F13-F24: reserved in the matrix for later use
     ),
 };

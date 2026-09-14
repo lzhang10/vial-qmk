@@ -20,6 +20,6 @@ KEY_OVERRIDE_ENABLE = no
 LAYER_LOCK_ENABLE = no
 REPEAT_KEY_ENABLE = no
 
-# One Vial-editable layer is the maximum that fits in 1KB EEPROM
-# (16x16 virtual matrix x 2B).
-DYNAMIC_KEYMAP_LAYER_COUNT = 1
+# Three Vial-editable layers (8x16 virtual matrix x 2B = 256B per layer;
+# see config.h for the matrix shrink and the EEPROM budget).
+DYNAMIC_KEYMAP_LAYER_COUNT = 3
