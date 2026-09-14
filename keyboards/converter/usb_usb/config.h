@@ -18,7 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 
-/* size of virtual matrix */
+/* size of virtual matrix
+ *
+ * Board default: full 16 * 16 (matrix cell == HID usage byte).
+ *
+ * Vial keymaps override MATRIX_ROWS per keymap (the keymap's config.h is
+ * force-included after this file in every TU) to shrink the matrix and fit
+ * more dynamic layers into the 1KB EEPROM; the last row is then a packed
+ * tail row supplied via CONVERTER_TAIL_ROW. See custom_matrix.cpp and
+ * keymaps/lzhang10.advantage2/config.h for details.
+ */
 #define MATRIX_ROWS 16
 #define MATRIX_COLS 16
 

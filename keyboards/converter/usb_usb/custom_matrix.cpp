@@ -38,7 +38,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /* KEY CODE to Matrix
  *
  * HID keycode(1 byte):
- * Higher 5 bits indicates ROW and lower 3 bits COL.
+ * Higher 4 bits indicates ROW and lower 4 bits COL.
+ *
+ * By default the matrix is 16 * 16 and the mapping is the identity
+ * (cell == HID usage byte). Vial keymaps that need more layers than the
+ * full 16 * 16 virtual matrix allows (Vial stores ROWS * COLS * 2 bytes of
+ * the 1KB EEPROM per layer) shrink the matrix to MATRIX_ROWS x 16: rows
+ * 0..MATRIX_ROWS-2 keep the natural mapping and the last row is a packed
+ * tail row defined by the keymap via CONVERTER_TAIL_ROW (an initializer of
+ * MATRIX_COLS HID usages, 0xFF = invalid cell). Example (advantage2,
+ * MATRIX_ROWS 8): tail row = F21-F24 + the eight modifier usages 0xE0-0xE7.
  *
  *  7 6 5 4 3 2 1 0
  * +---------------+
@@ -58,6 +67,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ROW(code)      (((code) & ROW_MASK) >> 4)
 #define COL(code)      ((code) & COL_MASK)
 #define ROW_BITS(code) (1 << COL(code))
+
+#ifdef CONVERTER_TAIL_ROW
+static const uint8_t converter_tail_row[MATRIX_COLS] = CONVERTER_TAIL_ROW;
+#endif
+
+// Cell (row, col) -> HID usage byte, 0x00 for cells that do not exist.
+static uint8_t cell_to_code(uint8_t row, uint8_t col) {
+#ifdef CONVERTER_TAIL_ROW
+    if (row >= (uint8_t)(MATRIX_ROWS - 1)) {
+        uint8_t code = converter_tail_row[col];
+        return (code == 0xFF) ? 0x00 : code;
+    }
+#endif
+    return CODE(row, col);
+}
+
 
 // Integrated key state of all keyboards
 static report_keyboard_t local_keyboard_report;
@@ -184,7 +209,12 @@ extern "C" {
     }
 
     bool matrix_is_on(uint8_t row, uint8_t col) {
-        uint8_t code = CODE(row, col);
+        uint8_t code = cell_to_code(row, col);
+
+        // 0x00: no such cell (or KC_NO slot); no HID usage 0x00 exists.
+        if (code == 0x00) {
+            return false;
+        }
 
         if (IS_MODIFIER_KEYCODE(code)) {
             if (local_keyboard_report.mods & ROW_BITS(code)) {
@@ -200,16 +230,26 @@ extern "C" {
     }
 
     matrix_row_t matrix_get_row(uint8_t row) {
-        uint16_t row_bits = 0;
+        matrix_row_t row_bits = 0;
 
-        if (IS_MODIFIER_KEYCODE(CODE(row, 0)) && local_keyboard_report.mods) {
-            row_bits |= local_keyboard_report.mods;
-        }
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            uint8_t code = cell_to_code(row, col);
 
-        for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++) {
-            if (IS_ANY(local_keyboard_report.keys[i])) {
-                if (row == ROW(local_keyboard_report.keys[i])) {
-                    row_bits |= ROW_BITS(local_keyboard_report.keys[i]);
+            if (code == 0x00) {
+                continue;
+            }
+
+            if (IS_MODIFIER_KEYCODE(code)) {
+                if (local_keyboard_report.mods & ROW_BITS(code)) {
+                    row_bits |= (matrix_row_t)1 << col;
+                }
+            } else {
+                for (uint8_t i = 0; i < KEYBOARD_REPORT_KEYS; i++) {
+                    if (IS_ANY(local_keyboard_report.keys[i]) &&
+                        local_keyboard_report.keys[i] == code) {
+                        row_bits |= (matrix_row_t)1 << col;
+                        break;
+                    }
                 }
             }
         }
