@@ -24,14 +24,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #undef LAYOUT_all
 #include "layout.h"
 
-// lzhang: idle wake - tap KC_SYSTEM_WAKE after 9m30s without key input, so the
+// lzhang: idle wake - tap KC_SYSTEM_WAKE after 4m30s without key input, so the
 // host PC does not fall asleep while the Magic Keyboard is attached. Ported from
 // the old converter/usb_usb custom_matrix.cpp; it lives here (keymap level) because
 // the keyboard's matrix_scan_user is weak and this keeps the keyboard file close
-// to upstream. (The old code used a uint16_t for the 570000ms limit, which wrapped
+// to upstream. (The old code used a uint16_t for the 270000ms limit, which wrapped
 // to ~45s; this uses 32-bit timers as originally intended.)
 static uint32_t last_activity_timer = 0;
-#define IDLE_WAKE_LIMIT_MS 570000 // 9m30s in milliseconds
+#define IDLE_WAKE_LIMIT_MS 270000 // 4m30s in milliseconds
 
 void matrix_scan_user(void) {
     if (timer_elapsed32(last_activity_timer) > IDLE_WAKE_LIMIT_MS) {

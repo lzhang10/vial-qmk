@@ -3,13 +3,13 @@
 #include QMK_KEYBOARD_H
 #include "layout.h"
 
-// lzhang: idle wake - tap KC_SYSTEM_WAKE after 9m30s without key input, so the
+// lzhang: idle wake - tap KC_SYSTEM_WAKE after 4m30s without key input, so the
 // host PC does not fall asleep while the keyboard is attached. Ported from the
 // lzhang10.magic Vial keymap (it originally lived in the old
 // converter/usb_usb custom_matrix.cpp, which is disabled for Vial builds).
 // 32-bit timers, since a uint16_t 570000ms limit wraps to ~45s.
 static uint32_t last_activity_timer = 0;
-#define IDLE_WAKE_LIMIT_MS 570000 // 9m30s in milliseconds
+#define IDLE_WAKE_LIMIT_MS 270000 // 4m30s in milliseconds
 
 void matrix_scan_user(void) {
     if (timer_elapsed32(last_activity_timer) > IDLE_WAKE_LIMIT_MS) {
