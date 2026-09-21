@@ -45,6 +45,20 @@ void keyboard_post_init_kb(void) {
     defer_exec(50, flash_led, NULL);
 }
 
+// Idle wake: tap KC_SYSTEM_WAKE every 4m30s so the host PC does not fall
+// asleep. Fixed cadence (no keypress tracking) since the tap is inert when
+// the host is already awake. Ported from keyboards/converter/usb_usb
+// (branch lzhang10, keymap lzhang10.magic).
+static uint32_t idle_wake_timer = 0;
+#define IDLE_WAKE_LIMIT_MS 270000 // 4m30s in milliseconds
+
+void matrix_scan_kb(void) {
+    if (timer_elapsed32(idle_wake_timer) >= IDLE_WAKE_LIMIT_MS) {
+        tap_code(KC_SYSTEM_WAKE);
+        idle_wake_timer = timer_read32();
+    }
+}
+
 // This is just to be able to declare constants as they appear in the qmk console
 #define rev(b) \
             ((b & 1) << 15) | \
