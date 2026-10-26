@@ -395,6 +395,9 @@ bool process_record_quantum_helper(uint16_t keycode, keyrecord_t *record) {
 #ifdef CAPS_WORD_ENABLE
             process_caps_word(keycode, record) &&
 #endif
+#ifdef NUM_WORD_ENABLE
+            process_num_word(keycode, record) &&
+#endif
 #ifdef KEY_OVERRIDE_ENABLE
             process_key_override(keycode, record) &&
 #endif

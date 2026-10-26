@@ -137,6 +137,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef CAPS_WORD_ENABLE
 #    include "caps_word.h"
 #endif
+#ifdef NUM_WORD_ENABLE
+#    include "num_word.h"
+#endif
 #ifdef LEADER_ENABLE
 #    include "leader.h"
 #endif
@@ -718,6 +721,10 @@ void quantum_task(void) {
 
 #ifdef CAPS_WORD_ENABLE
     caps_word_task();
+#endif
+
+#ifdef NUM_WORD_ENABLE
+    num_word_task();
 #endif
 
 #ifdef SECURE_ENABLE

@@ -224,6 +224,11 @@ extern layer_state_t layer_state;
 #    include "process_caps_word.h"
 #endif
 
+#ifdef NUM_WORD_ENABLE
+#    include "num_word.h"
+#    include "process_num_word.h"
+#endif
+
 #ifdef AUTOCORRECT_ENABLE
 #    include "process_autocorrect.h"
 #endif
