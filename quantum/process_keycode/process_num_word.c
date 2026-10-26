@@ -63,16 +63,20 @@ static bool is_num_word_layer_keycode(uint16_t keycode) {
 }
 
 bool process_num_word(uint16_t keycode, keyrecord_t* record) {
-    // Releases never change the mode. Pass through.
-    if (!record->event.pressed) {
-        return true;
+    // TG(n) arms (or re-targets) the mode on press. Consume press and
+    // release so the standard toggle action never fires. A release that
+    // falls through would be re-derived as TG by process_action_record()
+    // and execute the stock toggle, fighting the mode.
+    if (keycode >= QK_TOGGLE_LAYER && keycode <= QK_TOGGLE_LAYER_MAX) {
+        if (record->event.pressed) {
+            num_word_arm(QK_TOGGLE_LAYER_GET_LAYER(keycode));
+        }
+        return false;
     }
 
-    // TG(n) arms (or re-targets) the mode. Consume both press and release
-    // so the standard toggle action never fires.
-    if (keycode >= QK_TOGGLE_LAYER && keycode <= QK_TOGGLE_LAYER_MAX) {
-        num_word_arm(QK_TOGGLE_LAYER_GET_LAYER(keycode));
-        return false;
+    // Other releases never change the mode. Pass through.
+    if (!record->event.pressed) {
+        return true;
     }
 
     if (!is_num_word_on()) {
