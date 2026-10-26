@@ -69,7 +69,7 @@ void num_word_disarm(void) {
         return;
     }
 
-    armed        = false;
+    armed = false;
     layer_off(target_layer);
     target_layer = 0;
     num_word_set_user(false);
